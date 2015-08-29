@@ -145,7 +145,10 @@ foreach($arc as $vol => $issue) {
 		echo '<h3 class="h">'."$year, Volume $vol".'</h3>';
 		echo '<div>';
 		foreach(array_keys($issue) as $num) {
-			echo '<a href="/archive/'.$vol.'/'.$num.'" class="btn">Issue '.$num.'</a>'.PHP_EOL;
+			echo '<a href="/archive/'.$vol.'/'.$num.'" class="issue btn">'.
+			'<img src="/img/cover-'.$year.'-'.$num.'.jpg" alt="cover">'.
+			'<span class="btn">Issue '.$num.'</span>'.
+			'</a>'.PHP_EOL;
 		}
 		echo '</div></div>';
 	}

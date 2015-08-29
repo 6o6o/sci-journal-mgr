@@ -14,14 +14,11 @@ For demonstration check out http://ukrbotj.co.ua, or http://algologia.co.ua
     * `J_ABBR` - Official abbreviation
     * `J_LANG` - Default publication language (most used)
     * `J_YEAR` - Year founded
- * __inc/dbconn.php__
-    * Your database `host`, `name`, `user` and `password`
+ * __inc/dbconn.php__ - your database `host`, `name`, `user` and `password`
  * __pages/*.html__
     * Each filename corresponds to a page in top navigation menus respectively
     * tools.html - optional page with additional features.
- * __img/*__
-		* logo.gif - Journal logo (100 x 100)
-		* cover.png - Default cover featured on homepage.
+ * __img/logo.gif__ - journal logo (100 x 100)
  * __favicon.ico__
  
 To add new pages, alter or remove existing you'll need to modify the following arrays in __index.php__ in form of `path => fullname` and ensure the included files exist in _pages_ directory with either `php` or `html` extension

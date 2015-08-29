@@ -106,7 +106,8 @@ h2 .rht,
 .journal img {
     box-shadow: 0 2px 16px rgba(0,0,0,.4);
 }
-.journal p {
+.journal p,
+.issue {
 	text-align:center;
 }
 button {
@@ -131,7 +132,9 @@ button:active {
 	border:1px solid transparent;
 }
 .btn:hover,
-.btn:focus {
+.btn:focus,
+.issue:hover .btn,
+.issue:focus .btn {
 	background:#e6e6e6;
 	text-decoration: none;
 }
@@ -167,6 +170,16 @@ button:active {
 .panel ~ .panel * + div,
 .closed * + div { display: none; }
 .panel[style] * + div { display: block; }
+.issue {
+	padding: 6px;
+	width: 150px;
+}
+.issue img {
+	background: url(/img/cover.gif) top / contain;
+	text-indent: -9999px;
+	height: 200px;
+	width: 150px;
+}
 .entry {
 	margin: 0 15px;
 }
