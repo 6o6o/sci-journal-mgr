@@ -18,6 +18,7 @@ function showAlert($msg, $ok = null) {
 }
 
 const J_NAME = 'Journal Name';
+const J_ABBR = 'J. Name';
 const J_LANG = 'Eng';
 const J_YEAR = 2000;
 $prefix = '';

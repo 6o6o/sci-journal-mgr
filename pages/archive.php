@@ -1,6 +1,6 @@
 <?
 function check($a, $d = 0) { return  !empty($_GET[$a]) || $d ? ' checked' : ''; }
-function cite($a) {	return '<i>'.J_NAME.'</i>. '.($a[0]+J_YEAR).', '.$a[0].' ('.$a[1].'):'.$a[2].'&ndash;'.$a[3]; }
+function cite($a) {	return '<i>'.J_ABBR.'</i>, '.($a[0]+J_YEAR).', '.$a[0].' ('.$a[1].'):'.$a[2].'&ndash;'.$a[3]; }
 function linkabs($a) { return '/archive/'.$a[0].'/'.$a[1].'/'.$a[2]; }
 function linkpdf($a) { return '/pdf/'.$a[0].'/'.$a[1].'/'.$a[0].'.0'.$a[1].'.'.str_pad($a[2],3,0,STR_PAD_LEFT).'.pdf'; }
 function linkedt($a) { return '<span class="rht"><a href="/newabs?vol='.$a[0].'&pg='.$a[2].'">Edit</a></span>'; }
