@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors',1);
 define('INC_DIR', __DIR__.'/inc/');
 
+function sethead($msg, $code = 404) { http_response_code($code); echo '<p>'.$msg.'</p>'; }
 function getlang($a) { return $a ? ucfirst($a) : J_LANG; }
 function buildMenu($items, $current = null) {
 	foreach($items as $url => $name) {
@@ -64,7 +65,7 @@ $current = array($path => true);
 $template = './pages/'.$path;
 if(is_file($template.'.html')) include $template.'.html';
 elseif(is_file($template.'.php')) include $template.'.php';
-else echo 'Page not found';
+else sethead('Page not found');
 $output = ob_get_contents();
 ob_end_clean();
 

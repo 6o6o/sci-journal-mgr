@@ -150,5 +150,5 @@ foreach($arc as $vol => $issue) {
 		}
 		echo '</div></div>';
 	}
-}} else echo 'No records found';
+}} else sethead('No records found', $qval ? 200 : 404);
 ?>
