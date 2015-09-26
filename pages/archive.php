@@ -61,12 +61,10 @@ if(isset($_GET['vol']) && $_GET['vol']*1) {
 	} ?>
 		<div class="search">
 			<form action="archive" method="get">
-				<input type="text" name="q" placeholder="Search for keywords..."<?=$qval?>>
-				<div class="rht">
-					<label class="btn"><input type="checkbox" name="abs"<?=check('abs',empty($_GET))?>><span>Abstracts</span></label>
-					<label class="btn"><input type="checkbox" name="refs"<?=check('refs')?>><span>References</span></label>
-					<button class="btn brd">Search</button>
-				</div>
+				<div class="full"><input type="text" name="q" placeholder="Search for keywords..."<?=$qval?>></div>
+				<div><label class="btn"><input type="checkbox" name="abs"<?=check('abs',empty($_GET))?>><span>Abstracts</span></label></div>
+				<div><label class="btn"><input type="checkbox" name="refs"<?=check('refs')?>><span>References</span></label></div>
+				<div><button class="btn brd">Search</button></div>
 			</form>
 		</div>
 <?

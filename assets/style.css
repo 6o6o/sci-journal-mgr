@@ -179,6 +179,8 @@ button:active {
 	text-indent: -9999px;
 	height: 200px;
 	width: 150px;
+	border: 0;
+	display: inline-block;
 }
 .entry {
 	margin: 0 15px;
@@ -232,16 +234,19 @@ h4>a:hover {
 	text-align: center;
 	line-height: 1.8;
 }
-.search { margin: 0 335px 20px 0; }
-.search .rht { margin: 0 -335px 0 5px; }
-.search button { margin-left: 10px; }
 .search * {
-	margin:0;
 	font-size: 16px;
 	line-height: 1.42857143;
 }
-.search input[name=q] {
-	width:98%;
+.search div {
+	display: table-cell;
+    white-space: nowrap;
+}
+.search button,
+.search label { margin: 0 0 0 10px; }
+.full,
+.full input {
+	width:100%;
 	box-sizing:border-box;
 }
 .archive .addabs,
