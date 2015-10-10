@@ -84,7 +84,8 @@ isset($mysqli) && $mysqli->close();
 			<?
 				buildMenu($assist);
 			?></ul>
-			<div><img src="/img/logo.gif" alt="logo" width="50" height="50"><span><?=J_NAME?></span></div>
+			<div class="issn">ISSN (print) xxxx-xxxx, (online) xxxx-xxxx</div>
+			<div class="title"><img src="/img/logo.gif" alt="logo"><span><?=J_NAME?></span></div>
 		</div>
 		<ul class="nav">
 			<?

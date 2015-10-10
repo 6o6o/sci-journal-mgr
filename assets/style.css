@@ -8,22 +8,31 @@ body {
 	min-width: 720px;
 	margin: 0px auto;
 }
-.header div {
-	margin: 20px 0px;
-	color: #777;
-}
-.header div * {
-	margin-right:10px;
-	font: 3em Constantia;
-	vertical-align:middle;
-}
 .header ul {
-	list-style:none;
 	float:right;
+	list-style:none;
+	margin: .2em 0 .5em;
 }
 .header ul li {
 	float:left;
 	margin-left:10px;
+}
+.issn {
+	clear: both;
+	float: right;
+}
+.title {
+	margin: 20px 0px;
+	color: #777;
+}
+.title * {
+	font: 3em Constantia;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+.title img {
+	width: 50px;
+	height: 50px;
 }
 .nav {
 	background: #eee;
