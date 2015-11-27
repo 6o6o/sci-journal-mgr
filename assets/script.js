@@ -52,13 +52,13 @@
 	var form = document.forms;
 	for(var i=0; i<form.length; i++) {
 		form[i].onsubmit = function() {
-			var ignore = this.ignore && this.ignore.checked;
+			var ignore = this.ignore && (this.ignore.checked || this.ignore.selectedIndex);
 			var handle = {
 				SELECT: 'selectedIndex'
 			}
 			if(!ignore) for(var i=0; i<this.length-1; i++) {
 				var inp = this[i], prohib;
-				if(!inp[handle[inp.nodeName] || 'value']) {
+				if(!inp[handle[inp.id || inp.nodeName] || 'value']) {
 					prohib = true;
 					inp.className = '';
 					inp.style.background = '#f99';

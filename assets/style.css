@@ -255,7 +255,9 @@ h4>a:hover {
     white-space: nowrap;
 }
 .search button,
-.search label { margin: 0 0 0 10px; }
+.search label,
+.search select { margin: 0 0 0 10px; }
+.search select { width: 140px; }
 .full,
 .full input {
 	width:100%;

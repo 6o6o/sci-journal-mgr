@@ -26,49 +26,70 @@ require_once(INC_DIR.'dbconn.php');
 include 'newabs.php';
 */
 $col = 'vol, issue';
-$cond = $qval = '';
 $group = 'GROUP BY '.$col;
 $query = 'SELECT %s FROM '.TBL_CON.' %s %s';
 $ccol = 'vol,issue,start_page,end_page,section,doi,title,author,pdf';
 $totrow = 0;
 $subj = $db->getAll();
+$cond = array();
+$xtra = false;
 
 if(isset($_GET['vol']) && $_GET['vol']*1) {
-	$cond = 'WHERE vol = '.$_GET['vol'];
+	$cond[] = 'vol = '.$_GET['vol'];
 	if(isset($_GET['issue']) && $_GET['issue']*1) {
 		$col = $ccol;
-		$cond .= ' AND issue = '.$_GET['issue'];
+		$cond[] = 'issue = '.$_GET['issue'];
 		$group = '';
 		if(isset($_GET['start_page']) && $_GET['start_page']*1) {
 			$col = '*';
-			$cond .= ' AND start_page = '.$_GET['start_page'];
+			$cond[] = 'start_page = '.$_GET['start_page'];
 		}
 	}
 } else {
-	if(!empty($_GET['q'])) {
-		$qval = ' value="'.$_GET['q'].'"';
+	if(!empty($_GET['sec'])) {
+		$sec = $_GET['sec'] * 1;
+		$keywords = $qval = '';
+
+		if(!empty($_GET['q'])) {
+			$qval = ' value="'.$_GET['q'].'"';
+			$keywords = implode(' +', preg_split('/\W+/', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
+		}
+
 		$idx = array(
 			'abs' => 'title,author,inst,abstract,keywords',
 			'refs' => 'refs'
 		);
-		$keywords = preg_split('/\W+/', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY);
+
 		foreach($idx as $k => $val)
-			if(isset($_GET[$k]))
-				$cfg[] = "SELECT $ccol FROM ".TBL_CON." WHERE MATCH($val) AGAINST ('+".implode(' +',$keywords)."' IN BOOLEAN MODE)";
+			if(isset($_GET[$k])) {
+				if($sec) $cond['sec'] = "section = ".$sec;
+				if($keywords) $cond['kw'] = "MATCH($val) AGAINST ('+".$keywords."' IN BOOLEAN MODE)";
+				$cfg[] = "SELECT $ccol FROM ".TBL_CON.($cond ? ' WHERE ' : '').implode(' AND ', $cond);
+			}
 		if(isset($cfg)) {
 			$query = implode(' UNION ',$cfg);
+			$xtra = true;
 		}
 	} ?>
 		<div class="search">
 			<form action="archive" method="get">
 				<div class="full"><input type="text" name="q" placeholder="Search for keywords..."<?=$qval?>></div>
-				<div><label class="btn"><input type="checkbox" name="abs"<?=check('abs',empty($_GET))?>><span>Abstracts</span></label></div>
+				<div><label class="btn" title="Includes: Title, Author, Institution, Abstract, Keywords"><input type="checkbox" name="abs"<?=check('abs',empty($_GET))?>><span>Content</span></label></div>
 				<div><label class="btn"><input type="checkbox" name="refs"<?=check('refs')?>><span>References</span></label></div>
+				<div><select name="sec" id="ignore">
+					<option selected>All sections</option>
+					<? foreach($subj as $k => $v) {
+						$sel = $sec && $sec === $k ? ' selected' : '';
+						echo '<option value="'.$k.'"'.$sel.'>'.$v.'</option>';
+					} ?>
+				</select></div>
 				<div><button class="btn brd">Search</button></div>
 			</form>
 		</div>
 <?
 }
+$cond = implode(' AND ', $cond);
+if($cond) $cond = ' WHERE '.$cond;
 
 $res = $mysqli->query(sprintf($query.' ORDER BY vol DESC', $col, $cond, $group));
 while ($row = $res->fetch_assoc()) {
@@ -79,7 +100,8 @@ while ($row = $res->fetch_assoc()) {
 print_r($arc);
 echo '</pre>';*/
 if(isset($arc)) {
-if($qval)
+$cursec = '';
+if($xtra)
 	echo plural($totrow, 'result');
 foreach($arc as $vol => $issue) {
 	$year = J_YEAR + $vol;
@@ -108,7 +130,6 @@ foreach($arc as $vol => $issue) {
 		}
 	} elseif(isset($abs['title'])) {
 		echo '<div class="content">';
-		$cursec = '';
 		foreach($issue as $cur) {
 			$abs = $cur[0];
 			$doi = $abs['doi'];
@@ -150,5 +171,5 @@ foreach($arc as $vol => $issue) {
 		}
 		echo '</div></div>';
 	}
-}} else sethead('No records found', $qval ? 200 : 404);
+}} else sethead('No records found', $xtra ? 200 : 404);
 ?>
