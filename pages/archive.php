@@ -46,30 +46,34 @@ if(isset($_GET['vol']) && $_GET['vol']*1) {
 		}
 	}
 } else {
-	if(!empty($_GET['sec'])) {
-		$sec = $_GET['sec'] * 1;
-		$keywords = $qval = '';
-
-		if(!empty($_GET['q'])) {
-			$qval = ' value="'.$_GET['q'].'"';
-			$keywords = implode(' +', preg_split('/\W+/', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
-		}
-
+	if(!empty($_GET['q']) || !empty($_GET['sec'])) {
+		$keywords = $qval = $sec = '';
 		$idx = array(
 			'abs' => 'title,author,inst,abstract,keywords',
 			'refs' => 'refs'
 		);
 
-		foreach($idx as $k => $val)
-			if(isset($_GET[$k])) {
-				if($sec) $cond['sec'] = "section = ".$sec;
-				if($keywords) $cond['kw'] = "MATCH($val) AGAINST ('+".$keywords."' IN BOOLEAN MODE)";
-				$cfg[] = "SELECT $ccol FROM ".TBL_CON.($cond ? ' WHERE ' : '').implode(' AND ', $cond);
-			}
-		if(isset($cfg)) {
-			$query = implode(' UNION ',$cfg);
-			$xtra = true;
+		if(!empty($_GET['sec'])) $sec = $_GET['sec'] * 1;
+		if(!empty($_GET['q'])) {
+			$qval = ' value="'.$_GET['q'].'"';
+			$keywords = implode(' +', preg_split('/\W+/', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
 		}
+
+		if($sec) $cond[] = "section = ".$sec;
+		if($keywords) {
+			foreach($idx as $k => $val)
+				if(isset($_GET[$k]))
+					$cmd[$k] = $val;
+		} else $cmd = array(0);
+		if(!isset($cmd)) $cmd = $idx;
+
+		foreach($cmd as $k => $val) {
+			if($val) $cond['kw'] = "MATCH($val) AGAINST ('+".$keywords."' IN BOOLEAN MODE)";
+			$cmd[$k] = "SELECT $ccol FROM ".TBL_CON.($cond ? ' WHERE ' : '').implode(' AND ', $cond);
+		}
+
+		$query = implode(' UNION ',$cmd);
+		$xtra = true;
 	} ?>
 		<div class="search">
 			<form action="archive" method="get">
