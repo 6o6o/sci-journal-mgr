@@ -103,9 +103,12 @@ ul sup {
 	margin-left: -24px;
 	float: left;
 }
-h2 .rht,
-.home .rht {
+h2 .rht {
 	margin:5px 0;
+}
+.content .rht {
+	font-weight:normal;
+	font-size:initial;
 }
 .journal,
 .addabs label {
@@ -391,8 +394,6 @@ label.btn input:checked + span:before {
 }
 .rht {
 	float:right;
-	font-weight:normal;
-	font-size:initial;
 }
 .xref {
 	background:url(/img/xref.png) no-repeat center;

@@ -97,7 +97,7 @@ isset($mysqli) && $mysqli->close();
 			?>
 		</div>
 		<div class="footer">
-			<p>&copy; <?=J_NAME?> 2015</p>
+			<span>&copy; 2015 <?=J_NAME?></span>
 		</div>
 	</div>
 	<script type="text/javascript" src="/assets/script.js"></script>
