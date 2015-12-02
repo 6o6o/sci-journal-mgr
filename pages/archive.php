@@ -1,6 +1,13 @@
 <?
+function cite($a) {
+	return '<cite><abbr>'.
+	J_ABBR.'</abbr> <span>'.
+	(J_YEAR+$a[0]).', '.
+	$a[0].' ('.$a[1].'):'.
+	$a[2].'&ndash;'.$a[3].
+	'</span></cite>';
+}
 function check($a, $d = 0) { return  !empty($_GET[$a]) || $d ? ' checked' : ''; }
-function cite($a) {	return '<i>'.J_ABBR.'</i>, '.($a[0]+J_YEAR).', '.$a[0].' ('.$a[1].'):'.$a[2].'&ndash;'.$a[3]; }
 function linkabs($a) { return '/archive/'.$a[0].'/'.$a[1].'/'.$a[2]; }
 function linkpdf($a) { return '/pdf/'.$a[0].'/'.$a[1].'/'.$a[0].'.0'.$a[1].'.'.str_pad($a[2],3,0,STR_PAD_LEFT).'.pdf'; }
 function linkedt($a) { return '<span class="rht"><a href="/newabs?vol='.$a[0].'&pg='.$a[2].'">Edit</a></span>'; }
@@ -115,14 +122,14 @@ foreach($arc as $vol => $issue) {
 		$loc = array_values(array_slice($abs,0,4));
 		$pdf = linkpdf($loc);
 		$edt = $user ? linkedt($loc) : '';
-		echo '<div>'.$edt.cite($loc).'</div>';
+		echo $edt.'<div>'.cite($loc).'</div>';
 		echo linker($abs['doi']);
 		echo '<div class="section">'.$subj[$abs['section']].'</div>';
 		echo '<h3>'.$abs['title'].'</h3>';
 		echo '<i>'.$abs['author'].'</i>';
 		echo '<ul><li>'.implode("</li><li>",explode("\r\n",$abs['inst'])).'</li></ul>';
-		echo '<div class="panel"><div class="h">Abstract</div>';
-		echo '<div>'.$abs['abstract'];
+		echo '<div class="panel"><div class="h">Abstract</div><div>';
+		echo '<p>'.$abs['abstract'].'</p>';
 		echo '<p><strong>Keywords:</strong> '.$abs['keywords'].'</p>';
 		echo '<p>Full text: '.linker($pdf, 'PDF ('.getlang($abs['pdf']).')').' '.
 			humansize(@filesize($_SERVER['DOCUMENT_ROOT'].$pdf)).'</p></div></div>';
@@ -138,8 +145,8 @@ foreach($arc as $vol => $issue) {
 			$abs = $cur[0];
 			$doi = $abs['doi'];
 			$doi = substr($doi, 0, strrpos($doi, '.'));
-			echo "<h2><span>".J_NAME." $year, Vol. $vol, Issue $abs[issue]</span>";
-			echo linker($doi, $doi, ' class="rht"')."</h2>";
+			echo linker($doi, $doi, ' class="rht"');
+			echo "<h2>".J_NAME." $year, Vol. $vol, Issue $abs[issue]</h2>";
 			echo plural(count($cur), 'article');
 			foreach($cur as $abs) {
 				if($cursec != $subj[$abs['section']]) {
@@ -151,11 +158,9 @@ foreach($arc as $vol => $issue) {
 				$pdf = linkpdf($loc);
 				$edt = $user ? linkedt($loc) : '';
 				echo '<div class="entry">';
-				echo '<h4>'.$edt.linker($url, $abs['title']).'</h4>';
+				echo $edt.'<h4>'.linker($url, $abs['title']).'</h4>';
 				echo '<div>'.$abs['author'].'</div>';
-				echo '<div class="dbl">'.cite($loc).'</div>';
-				echo linker($abs['doi']);
-				echo '<div class="clr"></div>';
+				echo cite($loc).' '.linker($abs['doi']);
 				if(file_exists($_SERVER['DOCUMENT_ROOT'].$pdf))
 					echo '<div>'.linker($url, 'Abstract').' | Full text: '.
 					linker($pdf, 'PDF ['.getlang($abs['pdf']).']').'</div>';
