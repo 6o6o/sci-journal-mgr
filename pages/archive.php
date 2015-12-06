@@ -13,12 +13,18 @@ function linkpdf($a) { return '/pdf/'.$a[0].'/'.$a[1].'/'.$a[0].'.0'.$a[1].'.'.s
 function linkedt($a) { return '<span class="rht"><a href="/newabs?vol='.$a[0].'&pg='.$a[2].'">Edit</a></span>'; }
 function plural($n, $a) { return '<div>'.$n.' '.$a.($n > 1 ? 's' : '').'</div>'; }
 function linker($a, $n = '', $x = '') {
+	$tail = '';
 	if(is_array($a)) {
-		$a = $a[0];
+		$dec = htmlspecialchars_decode($a[0]);
+		preg_match('/[^\s<>"]+/', $dec, $url);
+		$tail = htmlspecialchars(substr($dec, strlen($url[0])));
+		$link = $tail ? substr($a[0], 0, -strlen($tail)) : $a[0];
+		$a = ($a[1] == 'http' ? '' : 'http://').$url[0];
 		if(substr($a,10,7) == 'doi.org') $x = ' class="xref"';
+		else $n = $link;
 	}
 	if(!$n && !$x) $n = $a;
-	return $a ? '<a href="'.$a.'"'.$x.'>'.$n.'</a>' : '';
+	return $a ? '<a href="'.$a.'"'.$x.'>'.$n.'</a>'.$tail : '';
 }
 function humansize($bytes, $decimals = 2) {
   $sz = 'BKMGTP';
@@ -136,7 +142,7 @@ foreach($arc as $vol => $issue) {
 		if(strlen($abs['refs'])) {
 			echo '<div class="panel"><div class="h">References</div>';
 			echo '<div><ol class="ref"><li>'
-				.implode("</li><li>",explode("\r\n",preg_replace_callback('/http[^\s<>"]+\b/','linker',$abs['refs'])))
+				.implode("</li><li>",explode("\r\n",preg_replace_callback('/\b(http|www)[^\s<>"]+/','linker',$abs['refs'])))
 				.'</li></ol></div></div>';
 		}
 	} elseif(isset($abs['title'])) {

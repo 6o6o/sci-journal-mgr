@@ -33,10 +33,10 @@
 			if(q) {
 				var prt = el[i].parentNode;
 				var tag = prt.querySelectorAll(q);
-				var a = el[i].innerHTML;
+				var a = el[i].innerHTML.replace(/&nbsp;/g, String.fromCharCode(160));
 				if(prt.childNodes.length > 1 && alchar.test(a) && prt.childNodes.length != tag.length){
 					// omit sequetial tags <i>Proc. 16</i><i>th</i>, omit spaces and comas
-					a = a.replace(/^([\s,]+)|^/, '$1'+(el[i-1] === domWalker(el[i],0,alchar).parentNode ? '' : '&lt;'+n+'&gt;'));
+					a = a.replace(/^([\s,.]+)|^/, '$1'+(el[i-1] === domWalker(el[i],0,alchar).parentNode ? '' : '&lt;'+n+'&gt;'));
 					a = a.replace(/([\s,]+)$|$/, (el[i+1] === domWalker(el[i],1,alchar).parentNode ? '' : '&lt;/'+n+'&gt;')+'$1');
 					el[i].innerHTML = a;
 				}
@@ -48,7 +48,7 @@
 	}
 	var ctn = document.querySelector('div[contenteditable]');
 	var dchar = /([^\x09-\x0D\x20-\xFF\u0100-\u017F\u2013-\u2044]+)/g;
-	var alchar = /[\w\-\xC0-\xFF\u0100-\u0148\u2013()]+/;
+	var alchar = /[\w\-\xC0-\xFF\u0100-\u017F\u2013()]+/;
 	var form = document.forms;
 	for(var i=0; i<form.length; i++) {
 		form[i].onsubmit = function() {
@@ -183,6 +183,9 @@
 				var x = (c.substring(0,c.indexOf(' '))||c).toLowerCase();
 				if(!x.indexOf('abstract') || !x.indexOf('keywords') || !x.indexOf('references'))
 					c = c.substring(x.length+1);
+				var dummy = document.createElement('div');
+				dummy.innerHTML = c.replace(/\s+/g, ' ');
+				if(line != 4) c = dummy.innerHTML;
 				if(c) {
 					if(line > 8) {
 						newabs.refs.value += '\n'+c;
