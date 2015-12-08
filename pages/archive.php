@@ -32,6 +32,20 @@ function humansize($bytes, $decimals = 2) {
   if(!(strlen($bytes)%2)) $decimals = 0;
   return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
+function getval($a, $name = '', $int = false) {
+	$q = '"';
+	if(!empty($_GET[$a])) {
+		$val = $_GET[$a];
+		$num = $val * 1;
+		if($num || $int) {
+			$val = $num;
+			$q = '';
+		}
+		if($name * 1) $name = $a;
+		if($name && $val) $val = $name.'='.$q.$val.$q;
+	} else $val = '';
+	return $val;
+}
 require_once(INC_DIR.'dbconn.php');
 /*?>
 		<a href="#add">+ Add new abstract</a>
@@ -46,33 +60,34 @@ $totrow = 0;
 $subj = $db->getAll();
 $cond = array();
 $xtra = false;
+$qval = getval('q', 'value');
+$sec = getval('sec');
 
-if(isset($_GET['vol']) && $_GET['vol']*1) {
-	$cond[] = 'vol = '.$_GET['vol'];
-	if(isset($_GET['issue']) && $_GET['issue']*1) {
+if($val = getval('vol', 1, 1)) { // identical name, force int
+	$cond[] = $val;
+	if($val = getval('issue', 1, 1)) {
 		$col = $ccol;
-		$cond[] = 'issue = '.$_GET['issue'];
+		$cond[] = $val;
 		$group = '';
-		if(isset($_GET['start_page']) && $_GET['start_page']*1) {
+		if($val = getval('start_page', 1, 1)) {
 			$col = '*';
-			$cond[] = 'start_page = '.$_GET['start_page'];
+			$cond[] = $val;
 		}
 	}
 } else {
-	if(!empty($_GET['q']) || !empty($_GET['sec'])) {
-		$keywords = $qval = $sec = '';
+	if($qval || $sec) {
+		$keywords = '';
 		$idx = array(
 			'abs' => 'title,author,inst,abstract,keywords',
 			'refs' => 'refs'
 		);
 
-		if(!empty($_GET['sec'])) $sec = $_GET['sec'] * 1;
-		if(!empty($_GET['q'])) {
-			$qval = ' value="'.$_GET['q'].'"';
+		if($qval) {
+			$qval = ' '.$qval;
 			$keywords = implode(' +', preg_split('/\W+/', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
 		}
 
-		if($sec) $cond[] = "section = ".$sec;
+		if($sec * 1) $cond[] = getval('sec', 'section', 1);
 		if($keywords) {
 			foreach($idx as $k => $val)
 				if(isset($_GET[$k]))
@@ -142,7 +157,7 @@ foreach($arc as $vol => $issue) {
 		if(strlen($abs['refs'])) {
 			echo '<div class="panel"><div class="h">References</div>';
 			echo '<div><ol class="ref"><li>'
-				.implode("</li><li>",explode("\r\n",preg_replace_callback('/\b(http|www)[^\s<>"]+/','linker',$abs['refs'])))
+				.implode("</li><li>",explode("\r\n",preg_replace_callback('/\b(http|www)[^\s<>"]+\b[;\/]?/','linker',$abs['refs'])))
 				.'</li></ol></div></div>';
 		}
 	} elseif(isset($abs['title'])) {
