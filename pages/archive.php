@@ -14,7 +14,7 @@ function linkedt($a) { return '<span class="rht"><a href="/newabs?vol='.$a[0].'&
 function plural($n, $a) { return '<div>'.$n.' '.$a.($n > 1 ? 's' : '').'</div>'; }
 function linker($a, $n = '', $x = '') {
 	if(is_array($a)) {
-		if($a[1] == 'www') {
+		if($a[1] != 'http') {
 			$n = $a[0];
 			$a = 'http://'.$n;
 		} else $a = $a[0];
@@ -34,7 +34,7 @@ function getval($a, $name = '', $int = false) {
 	if(!empty($_GET[$a])) {
 		$val = $_GET[$a];
 		$num = $val * 1;
-		if($num || $int) {
+		if($val === (string) $num || $int) {
 			$val = $num;
 			$q = '';
 		}
@@ -137,6 +137,18 @@ foreach($arc as $vol => $issue) {
 	$cur = current($issue);
 	$abs = $cur[0];
 	if(isset($abs['abstract'])) {
+		$opn = '<i>';
+		$cls = '</i>';
+		$bgn = explode($opn, $abs['keywords']);
+		foreach($bgn as $val) {
+			$end = explode($cls, $val);
+			if(count($end) > 1)
+				$end[0] = $opn.preg_replace('/,\s*/', $cls.', '.$opn, $end[0]).$cls;
+			$kwd[] = implode($end);
+		}
+		$kwd = preg_split('/,\s*/', rtrim(implode('', $kwd), '.'));
+		foreach($kwd as &$w)
+			$w = linker('/archive?abs=on&q='.urlencode(strip_tags($w)), $w);
 		$loc = array_values(array_slice($abs,0,4));
 		$pdf = linkpdf($loc);
 		$edt = $user ? linkedt($loc) : '';
@@ -148,7 +160,7 @@ foreach($arc as $vol => $issue) {
 		echo '<ul><li>'.implode("</li><li>",explode("\r\n",$abs['inst'])).'</li></ul>';
 		echo '<div class="panel"><div class="h">Abstract</div><div>';
 		echo '<p>'.$abs['abstract'].'</p>';
-		echo '<p><strong>Keywords:</strong> '.$abs['keywords'].'</p>';
+		echo '<p><strong>Keywords:</strong> '.implode(', ', $kwd).'</p>';
 		echo '<p>Full text: '.linker($pdf, 'PDF ('.getlang($abs['pdf']).')').' '.
 			humansize(@filesize($_SERVER['DOCUMENT_ROOT'].$pdf)).'</p></div></div>';
 		if(strlen($abs['refs'])) {
