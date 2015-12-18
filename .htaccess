@@ -2,4 +2,4 @@ Options +Indexes
 
 RewriteEngine on
 RewriteRule ^\w+/*$ index.php
-RewriteRule ^archive/(\d+)/*(\d+)*/*(\d+)*/*$ index.php?vol=$1&issue=$2&start_page=$3
+RewriteRule ^archive/(\d+)/*(\d+)*/*(\d+)*/*$ index.php?vol=$1&issue=$2&page=$3

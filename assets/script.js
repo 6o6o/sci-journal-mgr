@@ -208,7 +208,7 @@
 						if(c && c.length > 4) {
 							newabs.vol.value = c[1];
 							newabs.issue.value = c[2];
-							newabs.start_page.value = c[3];
+							newabs.page.value = c[3];
 							newabs.end_page.value = c[4];
 						}
 					}}

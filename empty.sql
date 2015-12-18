@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `j_content` (
   `vol` tinyint(3) unsigned NOT NULL,
   `issue` tinyint(3) unsigned NOT NULL,
-  `start_page` int(10) unsigned NOT NULL,
+  `page` int(10) unsigned NOT NULL,
   `end_page` int(10) unsigned NOT NULL,
   `section` tinyint(3) unsigned NOT NULL,
   `doi` varchar(255) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `j_content` (
   `keywords` varchar(255) NOT NULL,
   `pdf` varchar(255) NOT NULL,
   `refs` text NOT NULL,
-  UNIQUE KEY `uniq_idx` (`vol`,`issue`,`start_page`),
+  UNIQUE KEY `uniq_idx` (`vol`,`issue`,`page`),
   FULLTEXT KEY `idx1` (`title`,`author`,`inst`,`abstract`,`keywords`),
   FULLTEXT KEY `idx2` (`refs`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

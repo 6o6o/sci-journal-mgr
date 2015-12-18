@@ -5,7 +5,7 @@ if(!empty($_POST['vol']) && count($_POST) > 2) {
 		if(isset($_POST['update'], $_POST['pg'])) {
 			$res = $db->update(
 				$_POST['update'],
-				array('vol' => $_POST['vol'], 'start_page' => $_POST['pg']),
+				array('vol' => $_POST['vol'], 'page' => $_POST['pg']),
 				TBL_CON
 			);
 			showAlert(

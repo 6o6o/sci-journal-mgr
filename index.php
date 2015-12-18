@@ -42,7 +42,7 @@ $parex = array(
 	'pg' => 'Edit record',
 	'vol' => '',
 	'issue' => '',
-	'start_page' => 'Page'
+	'page' => ''
 );
 
 ob_start();

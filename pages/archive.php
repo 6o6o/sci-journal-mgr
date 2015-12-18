@@ -52,7 +52,7 @@ include 'newabs.php';
 $col = 'vol, issue';
 $group = 'GROUP BY '.$col;
 $query = 'SELECT %s FROM '.TBL_CON.' %s %s';
-$ccol = 'vol,issue,start_page,end_page,section,doi,title,author,pdf';
+$ccol = 'vol,issue,page,end_page,section,doi,title,author,pdf';
 $totrow = 0;
 $subj = $db->getAll();
 $cond = array();
@@ -66,7 +66,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 		$col = $ccol;
 		$cond[] = $val;
 		$group = '';
-		if($val = getval('start_page', 1, 1)) {
+		if($val = getval('page', 1, 1)) {
 			$col = '*';
 			$cond[] = $val;
 		}

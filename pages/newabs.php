@@ -17,7 +17,7 @@ function prVal($c, $tx = '') {
 	return ' name="'.$c.'"'.$val;
 }
 if(!empty($_GET['vol']) && !empty($_GET['pg'])) {
-	$rec = $db->getRow(array('vol' => $_GET['vol']*1, 'start_page' => $_GET['pg']*1), TBL_CON);
+	$rec = $db->getRow(array('vol' => $_GET['vol']*1, 'page' => $_GET['pg']*1), TBL_CON);
 }
 
 ?>
@@ -35,7 +35,7 @@ if(!empty($_GET['vol']) && !empty($_GET['pg'])) {
 					<div class="dbl rht"><span>Issue:</span><input type="text" maxlength="2"<?=prVal('issue')?>></div>
 				</div>
 				<div class="dbl rht">
-					<div class="dbl"><span>Start page:</span><input type="text" maxlength="4"<?=prVal('start_page')?>></div>
+					<div class="dbl"><span>Start page:</span><input type="text" maxlength="4"<?=prVal('page')?>></div>
 					<div class="dbl rht"><span>End page:</span><input type="text" maxlength="4"<?=prVal('end_page')?>></div>
 				</div>
 				</div>
