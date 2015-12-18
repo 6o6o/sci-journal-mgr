@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors',1);
 define('INC_DIR', __DIR__.'/inc/');
 
+function mkdoi($a) { return $a ? DOI_ADDR.$a : ''; }
 function sethead($msg, $code = 404) { http_response_code($code); echo '<p>'.$msg.'</p>'; }
 function getlang($a) { return $a ? ucfirst($a) : J_LANG; }
 function buildMenu($items, $current = null) {
@@ -18,6 +19,7 @@ function showAlert($msg, $ok = null) {
 	'</div>'.PHP_EOL;
 }
 
+const DOI_ADDR = 'http://dx.doi.org/prefix/';
 const J_NAME = 'Journal Name';
 const J_ABBR = 'J. Name';
 const J_LANG = 'Eng';

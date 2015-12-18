@@ -153,7 +153,7 @@ foreach($arc as $vol => $issue) {
 		$pdf = linkpdf($loc);
 		$edt = $user ? linkedt($loc) : '';
 		echo $edt.'<div>'.cite($loc).'</div>';
-		echo linker($abs['doi']);
+		echo linker(mkdoi($abs['doi']));
 		echo '<div class="section">'.$subj[$abs['section']].'</div>';
 		echo '<h3>'.$abs['title'].'</h3>';
 		echo '<i>'.$abs['author'].'</i>';
@@ -173,7 +173,7 @@ foreach($arc as $vol => $issue) {
 		echo '<div class="content">';
 		foreach($issue as $cur) {
 			$abs = $cur[0];
-			$doi = $abs['doi'];
+			$doi = mkdoi($abs['doi']);
 			$doi = substr($doi, 0, strrpos($doi, '.'));
 			echo linker($doi, $doi, ' class="rht"');
 			echo "<h2>".J_NAME." $year, Vol. $vol, Issue $abs[issue]</h2>";
@@ -190,7 +190,7 @@ foreach($arc as $vol => $issue) {
 				echo '<div class="entry">';
 				echo $edt.'<h4>'.linker($url, $abs['title']).'</h4>';
 				echo '<div>'.$abs['author'].'</div>';
-				echo cite($loc).' '.linker($abs['doi']);
+				echo cite($loc).' '.linker(mkdoi($abs['doi']));
 				if(file_exists($_SERVER['DOCUMENT_ROOT'].$pdf))
 					echo '<div>'.linker($url, 'Abstract').' | Full text: '.
 					linker($pdf, 'PDF ['.getlang($abs['pdf']).']').'</div>';

@@ -20,6 +20,10 @@ class mydb
 		$this->db = $handle;
 		$this->prep = array(
 			TBL_CON => array(
+				'doi' => function(&$a) {
+					$base = substr($a, 0, strlen(DOI_ADDR));
+					if($base == DOI_ADDR) $a = substr($a, strlen(DOI_ADDR));
+				},
 				'pdf' => function(&$a) { if($a && !strcasecmp($a, J_LANG)) $a = ''; },
 				'section' => function(&$a) {
 					if(!intval($a)) {

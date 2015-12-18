@@ -18,6 +18,7 @@ function prVal($c, $tx = '') {
 }
 if(!empty($_GET['vol']) && !empty($_GET['pg'])) {
 	$rec = $db->getRow(array('vol' => $_GET['vol']*1, 'page' => $_GET['pg']*1), TBL_CON);
+	$rec['doi'] = mkdoi($rec['doi']);
 }
 
 ?>
