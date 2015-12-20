@@ -10,7 +10,7 @@ function cite($a) {
 function check($a, $d = 0) { return  !empty($_GET[$a]) || $d ? ' checked' : ''; }
 function linkabs($a) { return '/archive/'.$a[0].'/'.$a[1].'/'.$a[2]; }
 function linkpdf($a) { return '/pdf/'.$a[0].'/'.$a[1].'/'.$a[0].'.0'.$a[1].'.'.str_pad($a[2],3,0,STR_PAD_LEFT).'.pdf'; }
-function linkedt($a) { return '<span class="rht"><a href="/newabs?vol='.$a[0].'&pg='.$a[2].'">Edit</a></span>'; }
+function linkedt($a) { return '<span class="rht"><a href="/newabs?vol='.$a[0].'&amp;pg='.$a[2].'">Edit</a></span>'; }
 function plural($n, $a) { return '<div>'.$n.' '.$a.($n > 1 ? 's' : '').'</div>'; }
 function linker($a, $n = '', $x = '') {
 	if(is_array($a)) {
@@ -148,7 +148,7 @@ foreach($arc as $vol => $issue) {
 		}
 		$kwd = preg_split('/,\s*/', rtrim(implode('', $kwd), '.'));
 		foreach($kwd as &$w)
-			$w = linker('/archive?abs=on&q='.urlencode(strip_tags($w)), $w);
+			$w = linker('/archive?abs=on&amp;q='.urlencode(strip_tags($w)), $w);
 		$loc = array_values(array_slice($abs,0,4));
 		$pdf = linkpdf($loc);
 		$edt = $user ? linkedt($loc) : '';
