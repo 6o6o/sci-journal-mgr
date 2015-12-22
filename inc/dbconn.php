@@ -73,7 +73,8 @@ class mydb
 	function update($data, $cond, $tbl = TBL_USR) {
 		$params = $this->param($data, ',', $tbl);
 		$cond = $this->param($cond, 'AND', 'id');
-		return $this->db->query("UPDATE $tbl SET $params WHERE ".$cond);
+		$res = $this->db->query("UPDATE $tbl SET $params WHERE $cond LIMIT 1");
+		return $this->db->affected_rows;
 	}
 	
 	function getRow($cond, $tbl = TBL_USR, $expr = '') {

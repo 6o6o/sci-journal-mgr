@@ -16,9 +16,13 @@ function prVal($c, $tx = '') {
 	} else $val = '';
 	return ' name="'.$c.'"'.$val;
 }
-if(!empty($_GET['vol']) && !empty($_GET['pg'])) {
-	$rec = $db->getRow(array('vol' => $_GET['vol']*1, 'page' => $_GET['pg']*1), TBL_CON);
-	$rec['doi'] = mkdoi($rec['doi']);
+if(!empty($_GET['page'])) {
+	$rec = $db->getRow($_GET, TBL_CON);
+	if($rec) {
+		$rec['doi'] = mkdoi($rec['doi']);
+		$rec['pdf'] = getlang($rec['pdf']);
+		$_GET = array_slice($rec,0,4);
+	}
 }
 
 ?>
@@ -59,9 +63,7 @@ if(!empty($_GET['vol']) && !empty($_GET['pg'])) {
 				<div class="row"><span>Abstract:</span><textarea<?=prVal('abstract', 5)?></textarea></div>
 				<div class="row"><span>Keywords:</span><input type="text" maxlength="255"<?=prVal('keywords')?>></div>
 				<?
-				if(isset($rec)) {
-					$rec['pdf'] = getlang($rec['pdf']);
-					?>
+				if($rec) { ?>
 					<div class="row"><span>Language:</span><input type="text" maxlength="255"<?=prVal('pdf')?>></div>
 				<? } ?>
 				<div class="row"><span>References:</span><textarea<?=prVal('refs', 2)?></textarea></div>
