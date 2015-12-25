@@ -24,7 +24,6 @@ const J_NAME = 'Journal Name';
 const J_ABBR = 'J. Name';
 const J_LANG = 'Eng';
 const J_YEAR = 2000;
-$prefix = '';
 
 $path = preg_match('/[\w\-.]+/',$_SERVER['REQUEST_URI'],$path) ? $path[0] : '';
 $page = array(
@@ -39,13 +38,15 @@ $assist = array(
 	'tools' => '',
 	'login' => ''
 );
-$parex = array(
+$param = array(
 	'q' => 'Search results for',
-	'pg' => 'Edit record',
+	'sec' => 'Articles',
 	'vol' => '',
 	'issue' => '',
 	'page' => ''
 );
+$prefix = array();
+$i = 0;
 
 ob_start();
 include INC_DIR.'usermodule.php';
@@ -54,13 +55,15 @@ include INC_DIR.'postabs.php';
 $all = $page + $assist;
 unset($all['home']);
 if(isset($all[$path])) {
-	foreach($parex as $k => $val) {
+	foreach($param as $k => $val) {
 		if(!$val) $val = ucfirst($k);
-		$prefix .= !empty($_GET[$k]) ? $val.' '.$_GET[$k].' ' : '';
+		else if($i++) {
+			if(!$prefix && !empty($_GET[$k])) $prefix[] = $val;
+			continue;
+		}
+		if(!empty($_GET[$k])) $prefix[] = $val.' '.$_GET[$k];
 	}
-	rtrim($prefix);
-	if(!$prefix) $prefix = $all[$path] ? $all[$path] : ucfirst($path);
-	$prefix .= ' - ';
+	if(!$prefix) $prefix[] = $all[$path] ? $all[$path] : ucfirst($path);
 } else $path = 'home';
 $current = array($path => true);
 
@@ -71,12 +74,13 @@ else sethead('Page not found');
 $output = ob_get_contents();
 ob_end_clean();
 
+if($prefix) $prefix[] = '- ';
 isset($mysqli) && $mysqli->close();
 ?><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title><?=$prefix.J_NAME?></title>
+	<title><?=implode(' ', $prefix).J_NAME?></title>
 	<link href="/assets/style.css" rel="stylesheet">
 </head>
 <body>

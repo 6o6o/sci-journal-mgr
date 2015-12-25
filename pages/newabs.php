@@ -19,6 +19,7 @@ function prVal($c, $tx = '') {
 if(!empty($_GET['page'])) {
 	$rec = $db->getRow($_GET, TBL_CON);
 	if($rec) {
+		array_unshift($prefix, 'Edit');
 		$rec['doi'] = mkdoi($rec['doi']);
 		$rec['pdf'] = getlang($rec['pdf']);
 		$_GET = array_slice($rec,0,4);

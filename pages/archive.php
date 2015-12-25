@@ -78,6 +78,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 			'abs' => 'title,author,inst,abstract,keywords',
 			'refs' => 'refs'
 		);
+		if(isset($subj[$sec])) $prefix[] = 'in '.$subj[$sec];
 
 		if($qval) {
 			$qval = ' '.$qval;
