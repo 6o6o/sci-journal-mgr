@@ -113,7 +113,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 						echo '<option value="'.$k.'"'.$sel.'>'.$v.'</option>';
 					} ?>
 				</select></div>
-				<div><button class="btn brd">Search</button></div>
+				<div><button class="btn btn-green">Search</button></div>
 			</form>
 		</div>
 <?

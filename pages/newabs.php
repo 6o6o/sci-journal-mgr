@@ -73,7 +73,7 @@ if(!empty($_GET['page'])) {
 				?>
 				<div class="norow">
 					<label class="btn"><input type="checkbox" id="ignore"><span>Ignore warnings</span></label>
-					<button class="btn brd">Submit</button>
+					<button class="btn btn-blu">Submit</button>
 				</div>
 			</form>
 		</div>

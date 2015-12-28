@@ -48,7 +48,7 @@ if(count($_POST) && $admin) { // todo: move to header
 			} ?>
 			<div class="row">
 				<input type="hidden" id="ignore" value="1" checked>
-				<button class="btn brd">Save</button>
+				<button class="btn btn-blu">Save</button>
 			</div>
 			</form>
 		</div>
