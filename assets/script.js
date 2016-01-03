@@ -93,19 +93,22 @@
 	var panhed = document.querySelectorAll('.panel .h');
 	for (var i=0; i<panhed.length; i++) {
 		panhed[i].onclick = function() {
-			var panel = this.parentNode;
-			var cont = panel.querySelector('* ~ div');
-			var hh = this.offsetHeight-1;
-			var ph = panel.offsetHeight-2;
-			if(!panel.style.height) {
-				panel.style.height = ph+'px';
-				cont.style.display = 'block';
-				panel.offsetHeight;
-			}
-			if(Math.abs(parseInt(panel.style.height) - hh) < 5) {
-				panel.style.height = hh+1+cont.offsetHeight+'px';
-			} else {
-				panel.style.height = hh+'px';
+			for(var i=0; i<panhed.length; i++) {
+				var curpan = panhed[i];
+				var panel = curpan.parentNode;
+				var cont = panel.querySelector('* ~ div');
+				var hh = curpan.clientHeight;
+				var ph = panel.clientHeight;
+				if(!panel.style.height) {
+					panel.style.height = ph+'px';
+					cont.style.display = 'block';
+					panel.offsetHeight;
+				}
+				if(curpan == this) {
+					panel.style.height = hh+1+cont.offsetHeight+'px';
+				} else {
+					panel.style.height = hh+'px';
+				}
 			}
 		}
 	}
