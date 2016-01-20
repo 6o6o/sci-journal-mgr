@@ -10,7 +10,7 @@ function cite($a) {
 function check($a, $d = 0) { return  !empty($_GET[$a]) || $d ? ' checked' : ''; }
 function linkabs($a) { return '/archive/'.$a[0].'/'.$a[1].'/'.$a[2]; }
 function linkpdf($a) { return '/pdf/'.$a[0].'/'.$a[1].'/'.$a[0].'.0'.$a[1].'.'.str_pad($a[2],3,0,STR_PAD_LEFT).'.pdf'; }
-function linkedt($a) { return linker('/newabs?vol='.$a[0].'&amp;issue='.$a[1].'&amp;page='.$a[2], 'Edit', ' class="rht"'); }
+function linkedt($a, $c) { return linker('/newabs?vol='.$a[0].'&amp;issue='.$a[1].'&amp;page='.$a[2], 'Edit', $c); }
 function plural($n, $a) { return '<div>'.$n.' '.$a.($n > 1 ? 's' : '').'</div>'; }
 function linker($a, $n = '', $x = '') {
 	if(is_array($a)) {
@@ -18,9 +18,10 @@ function linker($a, $n = '', $x = '') {
 			$n = $a[0];
 			$a = 'http://'.$n;
 		} else $a = $a[0];
-		if(substr($a,10,7) == 'doi.org') $x = ' class="xref"';
+		if(substr($a,10,7) == 'doi.org') $x = 'xref';
 	}
-	if(!$n && !$x) $n = $a;
+	if($x) $x = ' class="'.$x.'"';
+	else if(!$n) $n = $a;
 	return $a ? '<a href="'.$a.'"'.$x.'>'.$n.'</a>' : '';
 }
 function humansize($bytes, $decimals = 2) {
@@ -43,6 +44,35 @@ function getval($a, $name = '', $int = false) {
 	} else $val = '';
 	return $val;
 }
+function mkquery($cls) {
+	if(is_array($cls)) {
+		foreach($cls as $k => $v) {
+			if($v) $cmd[] = "$k $v";
+		}
+		$cls = implode(' ', $cmd);
+	}
+	return $cls;
+}
+function paginate($a, $pg, $adt = '') {
+	$i = 0;
+	$pgs = explode(',', $a[$pg.'s']);
+	$path = '/archive/';
+	do $path .= current($a).'/';
+	while(next($a) && $pg != key($a));
+	foreach($pgs as $val) {
+		if($val == $a[$pg]) {
+			$prev = isset($pgs[$i-1]) ? $pgs[$i-1] : '';
+			$next = isset($pgs[$i+1]) ? $pgs[$i+1] : '';
+			break;
+		}
+		$i++;
+	}
+	return '<div class="ctrl rht"><ul class="pagination"><li>'.
+	linker($prev ? $path.$prev : '#', '', 'btn').
+	'</li><li><span>'.($i+1).' of '.count($pgs).'</span></li><li>'.
+	linker($next ? $path.$next : '#', '', 'btn').'</li></ul>'.
+	linker(substr($path, 0, -1), 'Up', 'btn brd lev').$adt.'</div>';
+}
 require_once(INC_DIR.'dbconn.php');
 /*?>
 		<a href="#add">+ Add new abstract</a>
@@ -50,9 +80,16 @@ require_once(INC_DIR.'dbconn.php');
 include 'newabs.php';
 */
 $col = 'vol, issue';
-$group = 'GROUP BY '.$col;
-$query = 'SELECT %s FROM '.TBL_CON.' %s %s';
-$ccol = 'vol,issue,page,end_page,section,doi,title,author,pdf';
+$query = array(
+	'SELECT' => $col,
+	'FROM' => TBL_CON,
+	'JOIN' => '',
+	'WHERE' => '',
+	'GROUP BY' => $col,
+	'ORDER BY' => 'vol DESC'
+);
+$subsel = 'GROUP_CONCAT(%1$s CAST(%2$s AS CHAR)) AS %2$ss';
+$ctncol = 'vol,issue,page,end_page,section,doi,title,author,pdf';
 $totrow = 0;
 $subj = $db->getAll();
 $cond = array();
@@ -61,14 +98,19 @@ $qval = getval('q', 'value');
 $sec = getval('sec');
 
 if($val = getval('vol', 1, 1)) { // identical name, force int
-	$cond[] = $val;
+	$query['WHERE'] = $val;
 	if($val = getval('issue', 1, 1)) {
-		$col = $ccol;
-		$cond[] = $val;
-		$group = '';
+		$query['GROUP BY'] = '';
+		$query['SELECT'] = sprintf($subsel, 'DISTINCT', 'issue');
+		$query['JOIN'] = '('.mkquery($query).') x';
+		$query['SELECT'] = $ctncol.',issues';
+		$query['WHERE'] .= ' AND '.$val;
 		if($val = getval('page', 1, 1)) {
-			$col = '*';
-			$cond[] = $val;
+			$query['SELECT'] = sprintf($subsel, '', 'page');
+			$query['JOIN'] = '';
+			$query['JOIN'] = '('.mkquery($query).') x';
+			$query['SELECT'] = '*';
+			$query['WHERE'] .= ' AND '.$val;
 		}
 	}
 } else {
@@ -94,8 +136,8 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 		if(!isset($cmd)) $cmd = $idx;
 
 		foreach($cmd as $k => $val) {
-			if($val) $cond['kw'] = "MATCH($val) AGAINST ('+".$keywords."' IN BOOLEAN MODE)";
-			$cmd[$k] = "SELECT $ccol FROM ".TBL_CON.($cond ? ' WHERE ' : '').implode(' AND ', $cond);
+			if($val) $cond['kw'] = "MATCH($val) AGAINST ('+$keywords' IN BOOLEAN MODE)";
+			$cmd[$k] = "SELECT $ctncol FROM ".TBL_CON.($cond ? ' WHERE ' : '').implode(' AND ', $cond);
 		}
 
 		$query = implode(' UNION ',$cmd);
@@ -118,10 +160,8 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 		</div>
 <?
 }
-$cond = implode(' AND ', $cond);
-if($cond) $cond = ' WHERE '.$cond;
 
-$res = $mysqli->query(sprintf($query.' ORDER BY vol DESC', $col, $cond, $group));
+$res = $mysqli->query(mkquery($query));
 while ($row = $res->fetch_assoc()) {
 	$arc[$row['vol']][$row['issue']][] = $row;
 	$totrow++;
@@ -147,17 +187,18 @@ foreach($arc as $vol => $issue) {
 				$end[0] = $opn.preg_replace('/,\s*/', $cls.', '.$opn, $end[0]).$cls;
 			$kwd[] = implode($end);
 		}
-		$kwd = preg_split('/,\s*/', rtrim(implode('', $kwd), '.'));
+		$kwd = preg_split('/,\s*/', rtrim(implode($kwd), '.'));
 		foreach($kwd as &$w)
 			$w = linker('/archive?abs=on&amp;q='.urlencode(strip_tags($w)), $w);
 		$loc = array_values(array_slice($abs,0,4));
 		$pdf = linkpdf($loc);
-		$edt = $user ? linkedt($loc) : '';
-		echo $edt.'<div>'.cite($loc).'</div>';
+		$edt = $user ? linkedt($loc, 'btn brd') : '';
+		echo paginate($abs, 'page', $edt);
+		echo '<div>'.cite($loc).'</div>';
 		echo linker(mkdoi($abs['doi']));
 		echo '<div class="section">'.$subj[$abs['section']].'</div>';
 		echo '<h3>'.$abs['title'].'</h3>';
-		echo '<i>'.$abs['author'].'</i>';
+		echo '<em>'.$abs['author'].'</em>';
 		echo '<ul><li>'.implode("</li><li>",explode("\r\n",$abs['inst'])).'</li></ul>';
 		echo '<div class="panel"><div class="h">Abstract</div><div>';
 		echo '<p>'.$abs['abstract'].'</p>';
@@ -176,9 +217,10 @@ foreach($arc as $vol => $issue) {
 			$abs = $cur[0];
 			$doi = mkdoi($abs['doi']);
 			$doi = substr($doi, 0, strrpos($doi, '.'));
-			echo linker($doi, $doi, ' class="rht"');
-			echo "<h2>".J_NAME." $year, Vol. $vol, Issue $abs[issue]</h2>";
-			echo plural(count($cur), 'article');
+			$pag = isset($abs['issues']) ? paginate($abs, 'issue') : '';
+			$nam = $pag ? '' : ' <div class="rht">'.J_NAME.'</div>';
+			echo "$pag<h2>$year, Vol. $vol, Issue $abs[issue]$nam</h2>";
+			echo linker($doi, $doi, 'rht').plural(count($cur), 'article');
 			foreach($cur as $abs) {
 				if($cursec != $subj[$abs['section']]) {
 					$cursec = $subj[$abs['section']];
@@ -187,7 +229,7 @@ foreach($arc as $vol => $issue) {
 				$loc = array_values(array_slice($abs,0,4));
 				$url = linkabs($loc);
 				$pdf = linkpdf($loc);
-				$edt = $user ? linkedt($loc) : '';
+				$edt = $user ? linkedt($loc, 'rht') : '';
 				echo '<div class="entry">';
 				echo $edt.'<h4>'.linker($url, $abs['title']).'</h4>';
 				echo '<div>'.$abs['author'].'</div>';
