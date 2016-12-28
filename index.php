@@ -46,6 +46,7 @@ $param = array(
 	'page' => ''
 );
 $prefix = array();
+$meta = '';
 $i = 0;
 
 ob_start();
@@ -64,7 +65,10 @@ if(isset($all[$path])) {
 		if(!empty($_GET[$k])) $prefix[] = $val.' '.$_GET[$k];
 	}
 	if(!$prefix) $prefix[] = $all[$path] ? $all[$path] : ucfirst($path);
-} else if(!$path) $path = 'home';
+} else if(!$path) {
+	$path = 'home';
+	$meta = 'Dummy journal description';
+}
 $current = array($path => true);
 
 $template = './pages/'.$path;
@@ -82,6 +86,7 @@ isset($mysqli) && $mysqli->close();
 	<meta charset="UTF-8">
 	<title><?=implode(' ', $prefix).J_NAME?></title>
 	<link href="/assets/style.css" rel="stylesheet">
+	<meta name="description" content="<?=$meta?>">
 </head>
 <body>
 	<div class="container">
