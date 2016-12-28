@@ -19,7 +19,7 @@ function showAlert($msg, $ok = null) {
 	'</div>'.PHP_EOL;
 }
 
-const DOI_ADDR = 'http://dx.doi.org/prefix/';
+const DOI_ADDR = 'https://doi.org/prefix/';
 const J_NAME = 'Journal Name';
 const J_ABBR = 'J. Name';
 const J_LANG = 'Eng';
@@ -64,7 +64,7 @@ if(isset($all[$path])) {
 		if(!empty($_GET[$k])) $prefix[] = $val.' '.$_GET[$k];
 	}
 	if(!$prefix) $prefix[] = $all[$path] ? $all[$path] : ucfirst($path);
-} else $path = 'home';
+} else if(!$path) $path = 'home';
 $current = array($path => true);
 
 $template = './pages/'.$path;
