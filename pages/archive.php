@@ -242,12 +242,19 @@ foreach($arc as $vol => $issue) {
 		}
 		echo '</div>';
 	} else {
+		$latest = isset($latest) ? false : true;
 		echo '<div class="panel">';
 		echo '<h3 class="h">'."$year, Volume $vol".'</h3>';
 		echo '<div>';
 		foreach(array_keys($issue) as $num) {
+			$src = '/img/cover-'.$year.'-'.$num.'.jpg';
+			$datasrc = '';
+			if(!$latest) {
+				$datasrc = ' data-src="'.$src.'"';
+				$src = 'data:,';
+			}
 			echo '<a href="/archive/'.$vol.'/'.$num.'" class="issue btn">'.
-			'<img src="/img/cover-'.$year.'-'.$num.'.jpg" alt="cover">'.
+			'<img src="'.$src.'"'.$datasrc.' alt="cover">'.
 			'<span class="btn">Issue '.$num.'</span>'.
 			'</a>'.PHP_EOL;
 		}

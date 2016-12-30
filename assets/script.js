@@ -106,6 +106,15 @@
 				}
 				if(curpan == this) {
 					panel.style.height = hh+1+cont.offsetHeight+'px';
+					var hidimg = cont.querySelectorAll('img');
+					for(var j=0; j<hidimg.length; j++) {
+						var img = hidimg[j];
+						var dsrc = img.getAttribute('data-src');
+						if(dsrc) {
+							img.src = dsrc;
+							img.removeAttribute('data-src');
+						}
+					}
 				} else {
 					panel.style.height = hh+'px';
 				}
