@@ -124,7 +124,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 
 		if($qval) {
 			$qval = ' '.$qval;
-			$keywords = implode(' +', preg_split('/\W+/', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
+			$keywords = implode(' +', preg_split('/\W+/u', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
 		}
 
 		if($sec * 1) $cond[] = getval('sec', 'section', 1);
