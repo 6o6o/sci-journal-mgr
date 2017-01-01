@@ -140,7 +140,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 			$cmd[$k] = "SELECT $ctncol FROM ".TBL_CON.($cond ? ' WHERE ' : '').implode(' AND ', $cond);
 		}
 
-		$query = implode(' UNION ',$cmd);
+		$query = implode(' UNION ',$cmd).' ORDER BY vol desc, issue, page';
 		$xtra = true;
 	} ?>
 		<div class="search">
