@@ -20,8 +20,8 @@ if(!empty($_GET['page'])) {
 	$rec = $db->getRow($_GET, TBL_CON);
 	if($rec) {
 		array_unshift($prefix, 'Edit');
-		$rec['doi'] = mkdoi($rec['doi']);
 		$rec['pdf'] = getlang($rec['pdf']);
+		$rec['arg'] = array_slice($rec,0,3);
 		$_GET = array_slice($rec,0,4);
 	}
 }
@@ -33,7 +33,7 @@ if(!empty($_GET['page'])) {
 				<div contenteditable="true" data-ph="Paste content here..."></div>
 				<p>Paste content in the in above field. Each item must be newline-delimited, except for Institute and References - they can span any number of lines. The order of items should be as the fields below. First three should contain citation, section and DOI link. The following lines will be used to populate the subsequent fields. Abstract needs to be longer than 200 chars. Words &quot;keywords&quot; and &quot;abstract&quot; at the beginning of lines are cropped off.</p>
 			</div>
-			<form action="/<?=$path?>" name="newabs" method="post">
+			<form action="/<?=isset($rec) ? 'archive/'.implode('/', $rec['arg']) : $path?>" name="newabs" method="post">
 				<h3><?=isset($rec) ? 'Edit existing' : 'Add new'?> abstract</h3>
 				<div class="row">
 				<div class="dbl">
