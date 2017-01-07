@@ -3,13 +3,16 @@ function cite($a) {
 	return '<cite><abbr>'.
 	J_ABBR.'</abbr> <span>'.
 	(J_YEAR+$a[0]).', '.
-	$a[0].'('.$a[1].'): '.
-	$a[2].'&ndash;'.$a[3].
-	'</span></cite>';
+	$a[0].'('.$a[1].')'.
+	(isset($a[3]) ? ': '.
+	$a[2].'&ndash;'.$a[3]
+	: '').'</span></cite>';
 }
+
+function mkdoi($a, $b = DOI_ADDR) { return $a ? $b.$a : ''; }
 function check($a, $d = 0) { return  !empty($_GET[$a]) || $d ? ' checked' : ''; }
-function linkabs($a) { return '/archive/'.$a[0].'/'.$a[1].'/'.$a[2]; }
-function linkpdf($a) { return '/pdf/'.$a[0].'/'.$a[1].'/'.$a[0].'.0'.$a[1].'.'.str_pad($a[2],3,0,STR_PAD_LEFT).'.pdf'; }
+function linkarc($a) { return '/archive/'.implode('/', array_slice($a, 0, 3)); }
+function linkpdf($a, $b = 0) { return '/pdf/'.$a[0].'/'.$a[1].'/'.($a[0]+$b).'.0'.$a[1].($b > 0 ? '' : '.'.str_pad($a[2],3,0,STR_PAD_LEFT)).'.pdf'; }
 function linkedt($a, $c) { return linker('/newabs?vol='.$a[0].'&amp;issue='.$a[1].'&amp;page='.$a[2], 'Edit', $c); }
 function plural($n, $a) { return '<div>'.$n.' '.$a.($n > 1 ? 's' : '').'</div>'; }
 function linker($a, $n = '', $x = '') {
@@ -67,7 +70,7 @@ function paginate($a, $pg, $adt = '') {
 		}
 		$i++;
 	}
-	return '<div class="ctrl rht"><ul class="pagination"><li>'.
+	return '<div class="ctrl"><ul class="pagination"><li>'.
 	linker($prev ? $path.$prev : '#', '', 'btn').
 	'</li><li><span>'.($i+1).' of '.count($pgs).'</span></li><li>'.
 	linker($next ? $path.$next : '#', '', 'btn').'</li></ul>'.
@@ -212,22 +215,30 @@ foreach($arc as $vol => $issue) {
 				.'</li></ol></div></div>';
 		}
 	} elseif(isset($abs['title'])) {
-		echo '<div class="content">';
 		foreach($issue as $cur) {
 			$abs = $cur[0];
-			$doi = mkdoi($abs['doi']);
-			$doi = substr($doi, 0, strrpos($doi, '.'));
-			$pag = isset($abs['issues']) ? paginate($abs, 'issue') : '';
-			$nam = $pag ? '' : ' <div class="rht">'.J_NAME.'</div>';
-			echo "$pag<h2>$year, Vol. $vol, Issue $abs[issue]$nam</h2>";
-			echo linker($doi, $doi, 'rht').plural(count($cur), 'article');
+			$num = $abs['issue'];
+			$loc = array($vol, $num);
+			$pdf = linkpdf($loc, J_YEAR);
+			$dpn = implode(array_slice($doi, 1)).$vol.'.0'.$num;
+			$img = '<img src="/img/cover-'.$year.'-'.$num.'.jpg" alt="cover">';
+			$det = isset($abs['issues']) ? $img.paginate($abs, 'issue').
+				'<div>'.cite($loc).'</div>'.
+				'<div>DOI: '.linker($doi['addr'].$dpn, $dpn).'</div>'.
+				'<div>Full issue: '.linker($pdf, 'PDF').' '.
+				humansize(@filesize(substr($pdf, 1))).'</div>'
+				: linker(linkarc($loc), $img);
+			echo '<div class="content">';
+			echo '<div class="sticky rht">'.$det.'</div>';
+			echo '<div class="primary"><h2>'.J_ABBR." $year, Vol. $vol, Issue $num</h2>";
+			echo plural(count($cur), 'article');
 			foreach($cur as $abs) {
 				if($cursec != $subj[$abs['section']]) {
 					$cursec = $subj[$abs['section']];
 					echo "<h3>$cursec</h3>";
 				}
 				$loc = array_values(array_slice($abs,0,4));
-				$url = linkabs($loc);
+				$url = linkarc($loc);
 				$pdf = linkpdf($loc);
 				$edt = $user ? linkedt($loc, 'rht') : '';
 				echo '<div class="entry">';
@@ -239,8 +250,8 @@ foreach($arc as $vol => $issue) {
 					linker($pdf, 'PDF ['.getlang($abs['pdf']).']').'</div>';
 				echo '</div>';
 			}
+			echo '</div></div>';
 		}
-		echo '</div>';
 	} else {
 		$latest = isset($latest) ? false : true;
 		echo '<div class="panel">';

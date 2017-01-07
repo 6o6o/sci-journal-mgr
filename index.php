@@ -3,7 +3,6 @@ error_reporting(E_ALL);
 ini_set('display_errors',1);
 define('INC_DIR', __DIR__.'/inc/');
 
-function mkdoi($a) { return $a ? DOI_ADDR.$a : ''; }
 function sethead($msg, $code = 404) { http_response_code($code); echo '<p>'.$msg.'</p>'; }
 function getlang($a) { return $a ? ucfirst($a) : J_LANG; }
 function buildMenu($items, $current = null) {
@@ -19,11 +18,17 @@ function showAlert($msg, $ok = null) {
 	'</div>'.PHP_EOL;
 }
 
-const DOI_ADDR = 'https://doi.org/prefix/';
+$doi = array(
+	'addr' => 'https://doi.org/',
+	'pref' => '00.00000/',
+	'name' => 'j.name'
+);
+define('DOI_ADDR', $doi['addr'].$doi['pref']);
 const J_NAME = 'Journal Name';
 const J_ABBR = 'J. Name';
 const J_LANG = 'Eng';
 const J_YEAR = 2000;
+$meta = 'Dummy journal description';
 
 $path = preg_match('/[\w\-.]+/',$_SERVER['REQUEST_URI'],$path) ? $path[0] : '';
 $page = array(
@@ -46,7 +51,7 @@ $param = array(
 	'page' => ''
 );
 $prefix = array();
-$meta = '';
+$desc = '';
 $i = 0;
 
 ob_start();
@@ -67,7 +72,7 @@ if(isset($all[$path])) {
 	if(!$prefix) $prefix[] = $all[$path] ? $all[$path] : ucfirst($path);
 } else if(!$path) {
 	$path = 'home';
-	$meta = 'Dummy journal description';
+	$desc = $meta;
 }
 $current = array($path => true);
 
@@ -86,7 +91,7 @@ isset($mysqli) && $mysqli->close();
 	<meta charset="UTF-8">
 	<title><?=implode(' ', $prefix).J_NAME?></title>
 	<link href="/assets/style.css" rel="stylesheet">
-	<meta name="description" content="<?=$meta?>">
+	<meta name="description" content="<?=$desc?>">
 </head>
 <body>
 	<div class="container">

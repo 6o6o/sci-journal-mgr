@@ -14,7 +14,8 @@ For demonstration check out http://ukrbotj.co.ua, or http://algologia.co.ua
     * `J_ABBR` - Official abbreviation
     * `J_LANG` - Default publication language (most used)
     * `J_YEAR` - Year founded
-    * `Meta description` used on front page
+    * `$meta` description used on front page
+    * `$doi` link structure: prefix and name used by the journal
  * __inc/dbconn.php__ - your database `host`, `name`, `user` and `password`
  * __pages/*.html__
     * Each filename corresponds to a page in top navigation menus respectively

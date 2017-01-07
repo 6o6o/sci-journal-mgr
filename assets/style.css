@@ -246,6 +246,31 @@ a.lev:before {
 	border: 0;
 	display: inline-block;
 }
+.primary,
+.sticky .ctrl {
+	overflow: auto;
+}
+.sticky {
+	margin-left: 20px;
+	-webkit-position: sticky;
+	position: sticky;
+	top: 0;
+}
+.sticky > * {
+	margin-top: 10px;
+	text-align: center;
+}
+.sticky img {
+	width: 214px;
+	display: block;
+	margin-top: 20px;
+}
+.sticky > a > img {
+	width: 128px;
+}
+.content:first-child {
+	margin-top: -20px;
+}
 .entry {
 	margin: 0 15px;
 }
@@ -275,7 +300,7 @@ cite { font-style:normal; }
 .entry abbr { font-style:italic; }
 .entry cite {
 	display:inline-block;
-	width:500px;
+	width:400px;
 }
 .section {
 	color:#969400;
@@ -315,7 +340,6 @@ cite { font-style:normal; }
 	display: table-cell;
     white-space: nowrap;
 }
-.ctrl > *,
 .search button,
 .search label,
 .search select { margin: 0 0 0 10px; }
@@ -364,6 +388,7 @@ label.btn {
 	position: relative;
 	border: 0;
 }
+.ctrl > * + *,
 label.btn input {
 	margin:0 10px 0 0;
 }
