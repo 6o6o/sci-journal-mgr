@@ -485,14 +485,39 @@ label.btn input:checked + span:before {
 .rht {
 	float:right;
 }
-.xref {
-	background:url(/img/xref.png) no-repeat center;
-	display:inline-block;
-	width:60px;
-	height:14px;
+.ref a[href*=doi\.org],
+.ref a[href*=ncbi\.nlm\.nih\.gov] {
+	font-size: 0;
+	line-height: 1;
+	font-weight: bold;
+	text-decoration: none;
 }
-.xref:active {
-	transform:scale(.9);
+.ref a[href*=doi\.org]:after,
+.ref a[href*=ncbi\.nlm\.nih\.gov]:after {
+	color: white;
+	background: #e83644;
+	content: 'CrossRef';
+	display: inline-block;
+	padding: 3px 4px;
+	font-size: 12px;
+	border-radius: 2px;
+	box-shadow: inset 0 -1px 0 rgba(0,0,0,0.2);
+	vertical-align: super;
+	position: relative;
+}
+.ref a[href*=ncbi\.nlm\.nih\.gov]:after {
+	background: #369;
+	content: 'PubMed';
+}
+.ref a[href*=ncbi\.nlm\.nih\.gov\/pmc]:after {
+	background: #4eb036;
+	content: 'Free in PMC';
+}
+.ref a[href*=doi\.org]:active:after,
+.ref a[href*=ncbi\.nlm\.nih\.gov]:active:after {
+	box-shadow: none;
+	padding-bottom: 2px;
+	top: 1px;
 }
 .hl {background:red}
 .fade-out { transition: background 1.5s ease-out }

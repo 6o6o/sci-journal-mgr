@@ -142,6 +142,10 @@
 		}
 		newabs.refs.onpaste = function(e) {
 			var data = this.value, proc;
+			var source = {
+				'PMid' : 'https://www.ncbi.nlm.nih.gov/pubmed/',
+				'PMCid' : 'https://www.ncbi.nlm.nih.gov/pmc/articles/'
+			}
 			if (data && e && e.clipboardData) {
 				var tmp = document.createElement('div');
 				tmp.innerHTML = data;
@@ -154,9 +158,11 @@
 				for(var i=0; i<olddata.length; i++) {
 					for(var j=0; j<newdata.length; j++) {
 						if(!newdata[j].indexOf(olddata[i])) {
-							data[i] += newdata[j].substr(olddata[i].length);
+							var newref = newdata[j];
+							for(k in source) newref = newref.replace(k+':', source[k]);
+							data[i] += encodeURI(newref.substr(olddata[i].length)).replace(/%20/g, " ");
 							proc = true;
-						}
+						} else if (i == j) console.log(i+' : '+data[i]);
 					}
 				}
 				if(proc) {

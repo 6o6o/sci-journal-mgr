@@ -21,7 +21,6 @@ function linker($a, $n = '', $x = '') {
 			$n = $a[0];
 			$a = 'http://'.$n;
 		} else $a = $a[0];
-		if(substr($a,10,7) == 'doi.org') $x = 'xref';
 	}
 	if($x) $x = ' class="'.$x.'"';
 	else if(!$n) $n = $a;
