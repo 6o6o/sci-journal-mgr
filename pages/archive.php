@@ -93,6 +93,7 @@ $query = array(
 $subsel = 'GROUP_CONCAT(%1$s CAST(%2$s AS CHAR)) AS %2$ss';
 $ctncol = 'vol,issue,page,end_page,section,doi,title,author,pdf';
 $totrow = 0;
+$condic = array();
 $subj = $db->getAll();
 $cond = array();
 $xtra = false;
@@ -147,9 +148,18 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 	} ?>
 		<div class="search">
 			<form action="archive" method="get">
-				<div class="full"><input type="text" name="q" placeholder="Search for keywords..."<?=$qval?>></div>
-				<div><label class="btn" title="Includes: Title, Author, Institution, Abstract, Keywords"><input type="checkbox" name="abs"<?=check('abs',empty($_GET))?>><span>Content</span></label></div>
-				<div><label class="btn"><input type="checkbox" name="refs"<?=check('refs')?>><span>References</span></label></div>
+				<div class="full">
+					<input type="text" name="q" placeholder="Search for keywords..." title="Full words, minimum 4 letters"<?=$qval?>><?
+					$condic[] = ob_get_contents();
+					ob_clean(); ?>
+
+				</div>
+				<div><label class="btn" title="Includes: Title, Author, Institution, Abstract, Keywords">
+					<input type="checkbox" name="abs"<?=check('abs',empty($_GET))?>><span>Content</span>
+				</label></div>
+				<div><label class="btn">
+					<input type="checkbox" name="refs"<?=check('refs')?>><span>References</span>
+				</label></div>
 				<div><select name="sec" id="ignore">
 					<option selected>All sections</option>
 					<? foreach($subj as $k => $v) {
@@ -161,6 +171,8 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 			</form>
 		</div>
 <?
+	$condic[] = ob_get_contents();
+	ob_clean();
 }
 
 $res = $mysqli->query(mkquery($query));
@@ -173,8 +185,7 @@ print_r($arc);
 echo '</pre>';*/
 if(isset($arc)) {
 $cursec = '';
-if($xtra)
-	echo plural($totrow, 'result');
+echo implode($xtra ? plural($totrow, 'result') : '', $condic);
 foreach($arc as $vol => $issue) {
 	$year = J_YEAR + $vol;
 	$cur = current($issue);

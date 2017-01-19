@@ -349,6 +349,17 @@ cite { font-style:normal; }
 	width:100%;
 	box-sizing:border-box;
 }
+.full input {
+	padding-right: 96px;
+}
+.full input ~ div {
+	display: inline-block;
+	margin: 2px 0 2px -92px;
+	text-align: right;
+	vertical-align: middle;
+	width: 80px;
+	color: #777;
+}
 .archive .addabs,
 .addabs .autofill { display: none; }
 .addabs form div { text-align: right; }
