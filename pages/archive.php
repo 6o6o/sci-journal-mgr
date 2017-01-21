@@ -14,7 +14,7 @@ function check($a, $d = 0) { return  !empty($_GET[$a]) || $d ? ' checked' : ''; 
 function linkarc($a) { return '/archive/'.implode('/', array_slice($a, 0, 3)); }
 function linkpdf($a, $b = 0) { return '/pdf/'.$a[0].'/'.$a[1].'/'.($a[0]+$b).'.0'.$a[1].($b > 0 ? '' : '.'.str_pad($a[2],3,0,STR_PAD_LEFT)).'.pdf'; }
 function linkedt($a, $c) { return linker('/newabs?vol='.$a[0].'&amp;issue='.$a[1].'&amp;page='.$a[2], 'Edit', $c); }
-function plural($n, $a) { return '<div>'.$n.' '.$a.($n > 1 ? 's' : '').'</div>'; }
+function plural($n, $a) { return '<div>'.$n.' '.$a.($n == 1 ? '' : 's').'</div>'; }
 function linker($a, $n = '', $x = '') {
 	if(is_array($a)) {
 		if($a[1] != 'http') {
@@ -183,9 +183,9 @@ while ($row = $res->fetch_assoc()) {
 /*echo '<pre>';
 print_r($arc);
 echo '</pre>';*/
+echo implode($xtra ? plural($totrow, 'result') : '', $condic);
 if(isset($arc)) {
 $cursec = '';
-echo implode($xtra ? plural($totrow, 'result') : '', $condic);
 foreach($arc as $vol => $issue) {
 	$year = J_YEAR + $vol;
 	$cur = current($issue);
