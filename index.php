@@ -33,9 +33,9 @@ $meta = 'Dummy journal description';
 $path = preg_match('/[\w\-.]+/',$_SERVER['REQUEST_URI'],$path) ? $path[0] : '';
 $page = array(
 	'home' => '',
-	'editorial' => 'Editorial Board',
-	'authors' => 'For authors',
 	'archive' => '',
+	'authors' => 'For authors',
+	'editorial' => 'Editorial Board',
 	'subscription' => '',
 	'contacts' => ''
 );
@@ -100,8 +100,8 @@ isset($mysqli) && $mysqli->close();
 			<?
 				buildMenu($assist);
 			?></ul>
-			<div class="issn">ISSN (print) xxxx-xxxx, (online) xxxx-xxxx</div>
-			<div class="title"><img src="/img/logo.gif" alt="logo"><span><?=J_NAME?></span></div>
+			<div class="issn">ISSN xxxx-xxxx (print), ISSN xxxx-xxxx (online)</div>
+			<div class="title"><a href="/"><img src="/img/logo.gif" alt="logo"></a><span><?=J_NAME?></span></div>
 		</div>
 		<ul class="nav">
 			<?
