@@ -238,13 +238,16 @@ a.lev:before {
 	padding: 6px;
 	width: 150px;
 }
-.issue img {
-	background: url(/img/cover.gif) top / contain;
-	text-indent: -9999px;
+.issue img,
+.sticky img {
+	background: url(/img/cover.gif) top / contain no-repeat;
+	text-indent: 100%;
 	height: 200px;
 	width: 150px;
 	border: 0;
 	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
 }
 .primary,
 .sticky .ctrl {
@@ -262,11 +265,16 @@ a.lev:before {
 }
 .sticky img {
 	width: 214px;
+	height: 285px;
 	display: block;
 	margin-top: 20px;
 }
 .sticky > a > img {
-	width: 128px;
+	width: 126px;
+	height: 168px;
+}
+.search ~ .content {
+	min-height: 188px;
 }
 .content:first-child {
 	margin-top: -20px;
@@ -352,7 +360,7 @@ cite { font-style:normal; }
 .full input {
 	padding-right: 96px;
 }
-.full input ~ div {
+.full input + div {
 	display: inline-block;
 	margin: 2px 0 2px -92px;
 	text-align: right;
