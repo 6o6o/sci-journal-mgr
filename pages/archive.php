@@ -242,7 +242,7 @@ foreach($arc as $vol => $issue) {
 				'<div>DOI: '.linker($doi['addr'].$dpn, $dpn).'</div>'.
 				'<div>Full issue: '.linker($pdf, 'PDF').' '.
 				humansize(@filesize(substr($pdf, 1))).'</div>'
-				: linker(linkarc($loc), $img);
+				: linker(linkarc($loc), $img.cite($loc));
 			echo '<div class="content">';
 			echo '<div class="sticky rht">'.$det.'</div>';
 			echo '<div class="primary"><h2>'.J_ABBR." $year, Vol. $vol, Issue $num</h2>";

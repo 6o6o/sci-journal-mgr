@@ -256,7 +256,8 @@ a.lev:before {
 }
 .sticky {
 	margin-left: 20px;
-	-webkit-position: sticky;
+	position: relative;
+	position: -webkit-sticky;
 	position: sticky;
 	top: 0;
 }
@@ -273,6 +274,16 @@ a.lev:before {
 .sticky > a > img {
 	width: 126px;
 	height: 168px;
+}
+.sticky > a > cite {
+	background-color: rgba(0,0,0,0.5);
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	color: white;
+}
+.sticky > a > cite abbr {
+	display: none;
 }
 .search ~ .content {
 	min-height: 188px;
