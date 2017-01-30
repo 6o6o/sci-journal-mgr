@@ -11,10 +11,14 @@ function cite($a) {
 
 function mkdoi($a, $b = DOI_ADDR) { return $a ? $b.$a : ''; }
 function check($a, $d = 0) { return  !empty($_GET[$a]) || $d ? ' checked' : ''; }
-function linkarc($a) { return '/archive/'.implode('/', array_slice($a, 0, 3)); }
-function linkpdf($a, $b = 0) { return '/pdf/'.$a[0].'/'.$a[1].'/'.($a[0]+$b).'.0'.$a[1].($b > 0 ? '' : '.'.str_pad($a[2],3,0,STR_PAD_LEFT)).'.pdf'; }
-function linkedt($a, $c) { return linker('/newabs?vol='.$a[0].'&amp;issue='.$a[1].'&amp;page='.$a[2], 'Edit', $c); }
 function plural($n, $a) { return '<div>'.$n.' '.$a.($n == 1 ? '' : 's').'</div>'; }
+function linkarc($a) { return '/archive/'.implode('/', array_slice($a, 0, 3)); }
+function linkedt($a, $c) { return linker('/newabs?vol='.$a[0].'&amp;issue='.$a[1].'&amp;page='.$a[2], 'Edit', $c); }
+function linkpdf($a) {
+	return '/pdf/'.$a[0].'/'.$a[1].'/'.
+	PDF_PREF.'-'.($a[0]+J_YEAR).'-'.$a[0].'-'.$a[1].
+	(isset($a[2]) ? '-'.str_pad($a[2],3,0,STR_PAD_LEFT) : '').'.pdf';
+}
 function linker($a, $n = '', $x = '') {
 	if(is_array($a)) {
 		if($a[1] != 'http') {
@@ -76,6 +80,7 @@ function paginate($a, $pg, $adt = '') {
 	linker(substr($path, 0, -1), 'Up', 'btn brd lev').$adt.'</div>';
 }
 require_once(INC_DIR.'dbconn.php');
+define('PDF_PREF', $doi['name']);
 /*?>
 		<a href="#add">+ Add new abstract</a>
 <?
@@ -229,7 +234,7 @@ foreach($arc as $vol => $issue) {
 			$abs = $cur[0];
 			$num = $abs['issue'];
 			$loc = array($vol, $num);
-			$pdf = linkpdf($loc, J_YEAR);
+			$pdf = linkpdf($loc);
 			$dpn = implode(array_slice($doi, 1)).$vol.'.0'.$num;
 			$img = '<img src="/img/cover-'.$year.'-'.$num.'.jpg" alt="cover">';
 			$det = isset($abs['issues']) ? $img.paginate($abs, 'issue').
