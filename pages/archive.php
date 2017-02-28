@@ -77,7 +77,7 @@ function paginate($a, $pg, $adt = '') {
 	linker($prev ? $path.$prev : '#', '', 'btn').
 	'</li><li><span>'.($i+1).' of '.count($pgs).'</span></li><li>'.
 	linker($next ? $path.$next : '#', '', 'btn').'</li></ul>'.
-	linker(substr($path, 0, -1), 'Up', 'btn brd lev').$adt.'</div>';
+	linker(substr($path, 0, -1), 'Up', 'btn lev').$adt.'</div>';
 }
 require_once(INC_DIR.'dbconn.php');
 define('PDF_PREF', $doi['name']);
@@ -159,10 +159,10 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 					ob_clean(); ?>
 
 				</div>
-				<div><label class="btn" title="Includes: Title, Author, Institution, Abstract, Keywords">
+				<div><label class="box" title="Includes: Title, Author, Institution, Abstract, Keywords">
 					<input type="checkbox" name="abs"<?=check('abs',empty($_GET))?>><span>Content</span>
 				</label></div>
-				<div><label class="btn">
+				<div><label class="box">
 					<input type="checkbox" name="refs"<?=check('refs')?>><span>References</span>
 				</label></div>
 				<div><select name="sec" id="ignore">
@@ -172,7 +172,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 						echo '<option value="'.$k.'"'.$sel.'>'.$v.'</option>';
 					} ?>
 				</select></div>
-				<div><button class="btn btn-green">Search</button></div>
+				<div><button class="btn btn-grn">Search</button></div>
 			</form>
 		</div>
 <?
@@ -210,7 +210,7 @@ foreach($arc as $vol => $issue) {
 			$w = linker('/archive?abs=on&amp;q='.urlencode(strip_tags($w)), $w);
 		$loc = array_values(array_slice($abs,0,4));
 		$pdf = linkpdf($loc);
-		$edt = $user ? linkedt($loc, 'btn brd') : '';
+		$edt = $user ? linkedt($loc, 'btn') : '';
 		echo paginate($abs, 'page', $edt);
 		echo '<div>'.cite($loc).'</div>';
 		echo linker(mkdoi($abs['doi']));
@@ -279,9 +279,9 @@ foreach($arc as $vol => $issue) {
 				$datasrc = ' data-src="'.$src.'"';
 				$src = 'data:,';
 			}
-			echo '<a href="/archive/'.$vol.'/'.$num.'" class="issue btn">'.
+			echo '<a href="/archive/'.$vol.'/'.$num.'" class="issue box">'.
 			'<img src="'.$src.'"'.$datasrc.' alt="cover">'.
-			'<span class="btn">Issue '.$num.'</span>'.
+			'<span class="box">Issue '.$num.'</span>'.
 			'</a>'.PHP_EOL;
 		}
 		echo '</div></div>';

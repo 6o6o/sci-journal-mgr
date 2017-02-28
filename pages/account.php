@@ -26,7 +26,7 @@ if(count($_POST) && $admin) { // todo: move to header
 		<div class="row"><span>
 			<form action="home" method="get">
 				<input type="hidden" name="action" value="logout">
-				<button class="btn brd">Logout</button>
+				<button class="btn">Logout</button>
 			</form>
 		</span><div></div></div>
 		<? if($admin) { ?>

@@ -72,7 +72,7 @@ if(!empty($_GET['page'])) {
 				echo '<input type="hidden" name="'.preg_replace('/\W/','',$k).'" value="'.($v*1).'">';
 				?>
 				<div class="norow">
-					<label class="btn"><input type="checkbox" id="ignore"><span>Ignore warnings</span></label>
+					<label class="box"><input type="checkbox" id="ignore"><span>Ignore warnings</span></label>
 					<button class="btn btn-blu">Submit</button>
 				</div>
 			</form>
