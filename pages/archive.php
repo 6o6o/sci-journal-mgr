@@ -104,6 +104,7 @@ $cond = array();
 $xtra = false;
 $qval = getval('q', 'value');
 $sec = getval('sec');
+$qhelp = 'Minimum 4 letters per full word, or partial word ending with * symbol';
 
 if($val = getval('vol', 1, 1)) { // identical name, force int
 	$query['WHERE'] = $val;
@@ -132,7 +133,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 
 		if($qval) {
 			$qval = ' '.$qval;
-			$keywords = implode(' +', preg_split('/\W+/u', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
+			$keywords = implode(' +', preg_split('/[^\w*]+/u', $_GET['q'], 0, PREG_SPLIT_NO_EMPTY));
 		}
 
 		if($sec * 1) $cond[] = getval('sec', 'section', 1);
@@ -154,7 +155,7 @@ if($val = getval('vol', 1, 1)) { // identical name, force int
 		<div class="search">
 			<form action="archive" method="get">
 				<div class="full">
-					<input type="text" name="q" placeholder="Search for keywords..." title="Full words, minimum 4 letters"<?=$qval?>><?
+					<input type="text" name="q" placeholder="Search for keywords..." title="<?=$qhelp?>"<?=$qval?>><?
 					$condic[] = ob_get_contents();
 					ob_clean(); ?>
 
